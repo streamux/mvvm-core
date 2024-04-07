@@ -1,4 +1,8 @@
+import { BaseComponent } from "./base-components";
+
 export class ButtonEvent extends BaseComponent {
+  private _count: number = 0;
+
   get count() {
     return this._count;
   }
@@ -9,23 +13,23 @@ export class ButtonEvent extends BaseComponent {
 
   setup() {}
 
-  minus(param) {
+  minus(param: any) {
     console.log("Events Minus!!", param);
     this.setState(this.count--);
   }
 
-  plus(param) {
+  plus(param: any) {
     console.log("Events Plus!!", param);
     this.setState(this.count++);
   }
 
-  multi(num, num2, arr, obj) {
+  multi(num: number, num2: number, arr: Array<any>, obj: Object) {
     console.log("Events Calc!!", num, num2, arr, obj);
     this.count *= num;
     this.setState(this.count);
   }
 
-  dispatchIncrease(num) {
+  dispatchIncrease(num: number) {
     // console.log('Dispatch::increase!!', typeof(num), num);
     // this.count += num;
 
@@ -38,7 +42,7 @@ export class ButtonEvent extends BaseComponent {
     // this.setState(this.count);
   }
 
-  dispatchDecrease(num) {
+  dispatchDecrease(num: number) {
     // console.log('Dispatch::decrease!!', typeof(num), num);
     // this.count += num;
 

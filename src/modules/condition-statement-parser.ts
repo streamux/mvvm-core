@@ -1,14 +1,14 @@
-const removeConditionElement = (elList) => {
+import { camelToKebab } from "../utils/string-util";
+
+const removeConditionElement = (elList: Array<HTMLElement>) => {
   let isNextStepRemoved = false;
 
   if (!elList) return;
 
-  let count = 1;
-
-  elList.forEach((el) => {
+  elList.forEach((el: HTMLElement) => {
     const ifCondition = el.dataset["vIf"];
     const ifElseIfCondition = el.dataset["vElseIf"];
-    const ifElseCondition = el.dataset["vElse"];
+    // const ifElseCondition = el.dataset["vElse"];
     const condition = ifCondition || ifElseIfCondition;
 
     if (condition === "false" || isNextStepRemoved === true) {
@@ -31,12 +31,12 @@ const removeConditionElement = (elList) => {
 };
 
 // search element
-const searchNextConditionElement = (el) => {
-  let nextEl = el;
-  let elList = [nextEl];
+const searchNextConditionElement = (el: HTMLElement) => {
+  let nextEl: HTMLElement = el;
+  let elList: Array<HTMLElement> = [nextEl];
 
   do {
-    nextEl = nextEl.nextElementSibling;
+    nextEl = nextEl.nextElementSibling as HTMLElement;
     if (nextEl) {
       elList.push(nextEl);
     }
@@ -46,10 +46,10 @@ const searchNextConditionElement = (el) => {
   elList = null;
 };
 
-export const conditionStatementParser = (doc) => {
+export const conditionStatementParser = (doc: HTMLElement) => {
   const container = doc;
   const elements = doc.querySelectorAll("[data-v-if]");
-  elements.forEach((el) => searchNextConditionElement(el));
+  elements.forEach((el: HTMLElement) => searchNextConditionElement(el));
 
   return container;
 };

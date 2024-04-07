@@ -1,5 +1,8 @@
-export const templateParser = (template, target) => {
-  const eventMap = {};
+import { getUniqKey } from "../utils/string-util";
+import { argumentParser } from "./argument-parser";
+
+export const templateParser = (template: string, target: any) => {
+  const eventMap: { [key: string]: any } = {};
   let containerId = "";
   let idIndex = 0;
 

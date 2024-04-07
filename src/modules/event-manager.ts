@@ -1,5 +1,9 @@
+import { hasEqualEvent, isNativeEvent } from "../utils/event-util";
+
 export class EventManager {
-  static $expert = window || {};
+  public static $expert = window || {};
+  private events: Array<any> = null;
+  private _eventMap: Object = null;
 
   static create() {
     return new EventManager();
@@ -10,23 +14,19 @@ export class EventManager {
     this._eventMap = {};
   }
 
-  get expert() {
+  get expert(): any {
     return EventManager.$expert;
   }
 
-  get eventMap() {
+  get eventMap(): any {
     return this._eventMap;
   }
 
   set eventMap(events) {
-    return Object.assign(this._eventMap, events);
+    Object.assign(this._eventMap, events);
   }
 
-  get hasSamdEvent() {
-    return this.events.find((e) => e.type === type);
-  }
-
-  recordEvent(e) {
+  recordEvent(e: any) {
     this.events.push(e);
   }
 
@@ -36,19 +36,19 @@ export class EventManager {
     this.events = [];
   }
 
-  addEvent(type, listener) {
+  addEvent(type: string, listener: Function) {
     if (hasEqualEvent(this.events, type) && isNativeEvent(type)) return;
 
-    if ((type, listener)) {
+    if (type && listener) {
       // console.log('addEvent::', type,listener.name);
       this.expert.addEventListener(type, listener);
       this.recordEvent({ type, listener });
     }
   }
 
-  removeEvent(type, listener) {
+  removeEvent(type: string, listener: Function) {
     // console.log('removeEvent::', type, 'listener', listener);
-    if ((type, listener)) {
+    if (type && listener) {
       this.expert.removeEventListener(type, listener);
     }
   }

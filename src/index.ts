@@ -1,3 +1,3 @@
-import { App } from "./App";
+import { App } from "./app";
 
-export const app = new App().create("#app");
+new App().create("#app");

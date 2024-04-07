@@ -1,4 +1,6 @@
-export const argumentParser = (arg) => {
+import { transformToDataType } from "../utils/parser-util";
+
+export const argumentParser = (arg: string) => {
   if (!arg) return [];
 
   if (arg.indexOf(",") !== -1)

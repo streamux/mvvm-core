@@ -1,11 +1,14 @@
-export const componentParser = (template, target) => {
+import { transformToDataType } from "../utils/parser-util";
+import { mergeToQueryString } from "../utils/string-util";
+
+export const componentParser = (template: string, target: any) => {
   let components = template || "";
 
   // Remove previously registered events
   target.deleteRecordedEvents();
 
   // Look up modules registered in an instance
-  target.modules.forEach((value, key) => {
+  target.modules.forEach((value: any, key: string) => {
     // Look up registered components against a module key
     components = components.replace(
       new RegExp("(?:<" + key + "([^>]*)?>(.*)?</" + key + "[^>]*>)", "gim"),
@@ -15,7 +18,7 @@ export const componentParser = (template, target) => {
         // Convert a component event into a native event
         attributes = attributes.replace(
           /(?:\s+)?@([^=]*)(?:\s)?=(?:\s)?"([^"]*)"/g,
-          (origin, eventType, eventHandler) => {
+          (origin: string, eventType: string, eventHandler: string) => {
             const eventListener = target && target[eventHandler];
 
             if (eventType && eventListener) {
@@ -32,7 +35,7 @@ export const componentParser = (template, target) => {
         // Convert component tag's props into a class properties
         attributes = attributes.replace(
           /(?:\s+)?:([^=]*)="([^"]*)"/g,
-          (origin, propName, propValue) => {
+          (origin: string, propName: string, propValue: string) => {
             // console.log('propName::', propName, propValue);
             component[propName] = transformToDataType(propValue);
 
@@ -46,8 +49,13 @@ export const componentParser = (template, target) => {
         // Add the style properties of the component tag to the template's root tag
         renderedTemplate = renderedTemplate.replace(
           /^(<[^\s]*)([^>]*)(>)/gi,
-          (origin, tempPrefix, tempAttributes, tempSuffix) => {
-            const tempAttrObj = {};
+          (
+            origin: string,
+            tempPrefix: string,
+            tempAttributes: string,
+            tempSuffix: string
+          ) => {
+            const tempAttrObj: { [key: string]: any } = {};
 
             // extract component properties
             tempAttributes = tempAttributes
@@ -64,7 +72,11 @@ export const componentParser = (template, target) => {
             // Mix Component's Properties into Template's Properties
             attributes.replace(
               /(?:([^\s]*)\s?=\s?"([^"]*)")/gi,
-              (origin, compoAttrKey, compoAttrValue) => {
+              (
+                origin: string,
+                compoAttrKey: string,
+                compoAttrValue: string
+              ) => {
                 if (!tempAttrObj[compoAttrKey]) {
                   tempAttrObj[compoAttrKey] = compoAttrValue;
                 }
@@ -81,7 +93,11 @@ export const componentParser = (template, target) => {
 
             attributes.replace(
               /(v-else)(-if)?/gi,
-              (origin, compoAttrKey, subCompoAttrKey) => {
+              (
+                origin: string,
+                compoAttrKey: string,
+                subCompoAttrKey: string
+              ) => {
                 if (!subCompoAttrKey) {
                   tempAttrObj[compoAttrKey] = "";
                 }

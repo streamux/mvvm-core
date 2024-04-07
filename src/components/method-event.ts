@@ -1,4 +1,11 @@
+import { BaseComponent } from "./base-components";
+
 export class MethodEvent extends BaseComponent {
+  private _imageBorder: number = 0;
+  private _backgroundColor: string = "";
+  private count: number = 0;
+  private image: string = "";
+
   get imageBorder() {
     return this._imageBorder;
   }
@@ -22,7 +29,7 @@ export class MethodEvent extends BaseComponent {
     this.backgroundColor = "fff";
   }
 
-  clickMethod(param) {
+  clickMethod(param: any) {
     console.log("Methods BUTTON++!!", param);
 
     this._imageBorder++;
@@ -38,7 +45,7 @@ export class MethodEvent extends BaseComponent {
     });
   }
 
-  clickMethod2(param) {
+  clickMethod2(param: any) {
     console.log("Methods BUTTON2--", param);
 
     this._imageBorder--;

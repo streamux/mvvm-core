@@ -1,9 +1,9 @@
-import { checkObject, checkNumber } from "./CommonUtil";
+import { checkObject, checkNumber } from "./validation-util";
 
-export const parseNumber = (data) =>
+export const parseNumber = (data: any) =>
   /\./.test(data) ? parseFloat(data) : parseInt(data);
 
-export const parseDOM = (tagString) => {
+export const parseDOM = (tagString: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(tagString, "text/html");
   const element = doc.body.firstChild;
@@ -11,7 +11,7 @@ export const parseDOM = (tagString) => {
   return element;
 };
 
-export const parseObject = (data) => {
+export const parseObject = (data: any) => {
   try {
     return JSON.parse(data);
   } catch (e) {
@@ -19,7 +19,7 @@ export const parseObject = (data) => {
   }
 };
 
-export const parseInvalid = (data) => {
+export const parseInvalid = (data: any) => {
   data = data && data.trim();
 
   switch (data) {
@@ -33,8 +33,8 @@ export const parseInvalid = (data) => {
   return data;
 };
 
-const transformToDataType = (data) => {
-  const data = parseInvalid(data);
+export const transformToDataType = (data: any) => {
+  data = parseInvalid(data);
 
   if (!data) return data;
 

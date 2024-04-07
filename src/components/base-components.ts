@@ -1,11 +1,16 @@
-import { ModuleManager } from "../modules/ModuleManager";
-import { EventManager } from "../modules/EventManager";
-import { componentParser } from "../modules/ComponentParser";
-import { templateParser } from "../modules/TemplateParser";
-import { parseDOM } from "../utils/ParserUtil";
-import { conditionStatementParser } from "../modules/ConditionStatementParser";
+import { ModuleManager } from "../modules/module-manager";
+import { EventManager } from "../modules/event-manager";
+import { componentParser } from "../modules/component-parser";
+import { templateParser } from "../modules/template-parser";
+import { parseDOM } from "../utils/parser-util";
+import { conditionStatementParser } from "../modules/condition-statement-parser";
 
 export class BaseComponent {
+  protected containerId: string = "";
+  protected uid: number = 0;
+  protected moduleManager: ModuleManager = null;
+  protected eventManager: EventManager = null;
+
   constructor() {
     console.log(`${this.constructor.name}::initialize!!`);
 
@@ -48,7 +53,7 @@ export class BaseComponent {
     return this.moduleManager.modules;
   }
 
-  set modules(modules = {}) {
+  set modules(modules: any) {
     this.moduleManager.modules = modules;
   }
 
@@ -58,7 +63,7 @@ export class BaseComponent {
 
   setup() {}
 
-  addEvent(type, listener) {
+  addEvent(type: string, listener: Function) {
     this.eventManager.addEvent(type, listener);
   }
 
@@ -66,11 +71,11 @@ export class BaseComponent {
     this.eventManager.deleteRecordedEvents();
   }
 
-  emit(type, data) {
+  emit(type: string, data: any) {
     this.eventManager.expert.dispatchEvent(new CustomEvent(type, data));
   }
 
-  listener(e) {
+  listener(e: any) {
     const id = e.target?.dataset?.eventId;
 
     if (!id) return;
@@ -78,11 +83,12 @@ export class BaseComponent {
     const event = this.eventMap[id];
     const methodName = event && event.methodName;
     const params = event && event.params;
+    const func = (this as any)[methodName];
 
-    this[methodName] && this[methodName].apply(this, params);
+    func && func.apply(this, params);
   }
 
-  setState(state) {
+  setState(state?: any) {
     // console.log('setState', state);
     this.render();
   }
@@ -104,11 +110,9 @@ export class BaseComponent {
     this.containerId = containerId && "#" + containerId;
 
     if (element) {
-      let docTemplate = parseDOM(template);
+      let docTemplate = parseDOM(template) as HTMLElement;
       docTemplate = conditionStatementParser(docTemplate);
-
       element.parentNode.replaceChild(docTemplate, element);
-
       return "";
     }
 

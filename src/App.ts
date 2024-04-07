@@ -1,10 +1,12 @@
-import { BaseComponent } from "./components/BaseComponents";
+import { BaseComponent } from "./components/base-components";
 
-import { ButtonEvent } from "./components/ButtonEvent";
+import { ButtonEvent } from "./components/button-event";
 
-import { MethodEvent } from "./components/MethodEvent";
+import { MethodEvent } from "./components/method-event";
 
 export class App extends BaseComponent {
+  private count: number = 0;
+
   components() {
     return {
       "button-event": ButtonEvent,
@@ -15,33 +17,32 @@ export class App extends BaseComponent {
   setup() {
     this.count = 1;
 
-    console.log("setup");
     document.addEventListener("DOMContentLoaded", () => {
       console.log("DOMContentLoaded");
       this.render();
     });
   }
 
-  create(rootId) {
+  create(rootId: string) {
     console.log("create");
     this.containerId = rootId;
   }
 
-  increaseHandler(e) {
+  increaseHandler(e: { [key: string]: any }) {
     console.log("App:increaseHandler", e.detail.count);
 
     this.count = e.detail.count + 5;
     this.render();
   }
 
-  decreaseHandler(e) {
+  decreaseHandler(e: { [key: string]: any }) {
     console.log("App:decreaseHandler", e.detail.count);
 
     this.count = e.detail.count - 5;
     this.render();
   }
 
-  methodEventHandler(e) {
+  methodEventHandler(e: { [key: string]: any }) {
     console.log("App:methodEventHandler", e.detail.count, e.detail.message);
     this.count = e.detail.count;
     this.render();
