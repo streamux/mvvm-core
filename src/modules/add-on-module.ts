@@ -8,6 +8,6 @@ export const addOnModule = (component: any) => {
       instance.$uid = uid;
 
       return instance;
-    },
+    }
   };
 };

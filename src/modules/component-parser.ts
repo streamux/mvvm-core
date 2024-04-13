@@ -36,7 +36,6 @@ export const componentParser = (template: string, target: any) => {
         attributes = attributes.replace(
           /(?:\s+)?:([^=]*)="([^"]*)"/g,
           (origin: string, propName: string, propValue: string) => {
-            // console.log('propName::', propName, propValue);
             component[propName] = transformToDataType(propValue);
 
             return "";
@@ -49,34 +48,21 @@ export const componentParser = (template: string, target: any) => {
         // Add the style properties of the component tag to the template's root tag
         renderedTemplate = renderedTemplate.replace(
           /^(<[^\s]*)([^>]*)(>)/gi,
-          (
-            origin: string,
-            tempPrefix: string,
-            tempAttributes: string,
-            tempSuffix: string
-          ) => {
+          (origin: string, tempPrefix: string, tempAttributes: string, tempSuffix: string) => {
             const tempAttrObj: { [key: string]: any } = {};
 
             // extract component properties
             tempAttributes = tempAttributes
-              .replace(
-                /(?:([^\s]*)\s?=\s?"([^"]*)")/gi,
-                (origin, attrKey, attrValue) => {
-                  tempAttrObj[attrKey] = attrValue;
-                  return "";
-                }
-              )
+              .replace(/(?:([^\s]*)\s?=\s?"([^"]*)")/gi, (origin, attrKey, attrValue) => {
+                tempAttrObj[attrKey] = attrValue;
+                return "";
+              })
               .replace(/\s+/, "");
 
-            console.log("======", attributes);
             // Mix Component's Properties into Template's Properties
             attributes.replace(
               /(?:([^\s]*)\s?=\s?"([^"]*)")/gi,
-              (
-                origin: string,
-                compoAttrKey: string,
-                compoAttrValue: string
-              ) => {
+              (origin: string, compoAttrKey: string, compoAttrValue: string) => {
                 if (!tempAttrObj[compoAttrKey]) {
                   tempAttrObj[compoAttrKey] = compoAttrValue;
                 }
@@ -91,22 +77,14 @@ export const componentParser = (template: string, target: any) => {
               }
             );
 
-            attributes.replace(
-              /(v-else)(-if)?/gi,
-              (
-                origin: string,
-                compoAttrKey: string,
-                subCompoAttrKey: string
-              ) => {
-                if (!subCompoAttrKey) {
-                  tempAttrObj[compoAttrKey] = "";
-                }
+            attributes.replace(/(v-else)(-if)?/gi, (origin: string, compoAttrKey: string, subCompoAttrKey: string) => {
+              if (!subCompoAttrKey) {
+                tempAttrObj[compoAttrKey] = "";
               }
-            );
+            });
 
             tempAttributes = mergeToQueryString(tempAttrObj);
 
-            // console.log('tempAttributes', tempPrefix, '+++',  tempAttributes, '+++', tempSuffix);
             return tempPrefix + tempAttributes + tempSuffix;
           }
         );
@@ -116,6 +94,5 @@ export const componentParser = (template: string, target: any) => {
     );
   });
 
-  // console.log('components', components);
   return { components };
 };

@@ -22,12 +22,9 @@ const removeConditionElement = (elList: Array<HTMLElement>) => {
     const conditionPattern = /^vif|velseif|velse/i;
 
     Object.entries(datasets).forEach(([key, value]) => {
-      if (conditionPattern.test(key))
-        el.removeAttribute("data-" + camelToKebab(key));
+      if (conditionPattern.test(key)) el.removeAttribute("data-" + camelToKebab(key));
     });
   });
-
-  // console.log('----------------------');
 };
 
 // search element

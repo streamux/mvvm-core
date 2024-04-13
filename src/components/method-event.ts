@@ -40,8 +40,8 @@ export class MethodEvent extends BaseComponent {
     this.emit("methodEvent", {
       detail: {
         message: "Method Event Handler++",
-        count: this.count,
-      },
+        count: this.count
+      }
     });
   }
 
@@ -58,24 +58,23 @@ export class MethodEvent extends BaseComponent {
     this.emit("methodEvent", {
       detail: {
         message: "Method Event Handler--",
-        count: this.count,
-      },
+        count: this.count
+      }
     });
   }
 
   template() {
-    return `<div style="padding: 15px 0; border: 1px solid #f00; background-color: ${
-      this.backgroundColor
-    }">
-            <button on:click="clickMethod">Image Line ++</button>
-            <button on:click="clickMethod2">Image Line --</button>
-            <p>backgroundColor: ${this.backgroundColor}</p>
-            <p v-if="${this.count === 7}">
-               ${this.count} => Hide image if count is 7
-            </p>
-            <p v-else style="width:100%; border: ${
-              this.imageBorder
-            }px solid #0f0"><img src="${this.image}" /></p>
-          </div>`;
+    return `
+      <div style="padding: 15px 0; border: 1px solid #f00; background-color: ${this.backgroundColor}">
+        <button on:click="clickMethod">Image Line ++</button>
+        <button on:click="clickMethod2">Image Line --</button>
+        <p>backgroundColor: ${this.backgroundColor}</p>
+        <p v-if="${this.count === 7}">
+          ${this.count} => Hide image if count is 7
+        </p>
+        <p v-else style="width:100%; border: ${this.imageBorder}px solid #0f0">
+          <img src="${this.image}" />
+        </p>
+      </div>`;
   }
 }

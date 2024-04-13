@@ -35,8 +35,8 @@ export class ButtonEvent extends BaseComponent {
 
     this.emit("increase", {
       detail: {
-        count: this.count,
-      },
+        count: this.count
+      }
     });
 
     // this.setState(this.count);
@@ -48,8 +48,8 @@ export class ButtonEvent extends BaseComponent {
 
     this.emit("decrease", {
       detail: {
-        count: this.count,
-      },
+        count: this.count
+      }
     });
 
     // this.setState(this.count);
@@ -64,17 +64,18 @@ export class ButtonEvent extends BaseComponent {
   }
 
   template() {
-    return `<div style="border: 1px solid #f00">
-            <p style="padding: 2px;border: 1px solid #f00">
-              ButtonEvent:count = ${this.count}
-            </p>
-            <p>
-              <button on:click="dispatchIncrease">Events Dispatcher::increase</button>
-              <button on:click="dispatchDecrease">Events Dispatcher::decrease</button>
-            </p>
-            <p><button on:click="plus">Events Plus</button></p>
-            <p><button on:click="minus">Events Minus</button></p>
-            <p><button on:click="multi(2, 1, ["aa"], {"aa":"test"})">Events Multi</button></p>
-          </div>`;
+    return `
+      <div style="border: 1px solid #f00">
+        <p style="padding: 2px;border: 1px solid #f00">
+          ButtonEvent:count = ${this.count}
+        </p>
+        <p>
+          <button on:click="dispatchIncrease">Events Dispatcher::increase</button>
+          <button on:click="dispatchDecrease">Events Dispatcher::decrease</button>
+        </p>
+        <p><button on:click="plus">Events Plus</button></p>
+        <p><button on:click="minus">Events Minus</button></p>
+        <p><button on:click="multi(2, 1, ["aa"], {"aa":"test"})">Events Multi</button></p>
+      </div>`;
   }
 }

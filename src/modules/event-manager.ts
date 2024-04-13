@@ -32,7 +32,7 @@ export class EventManager {
 
   deleteRecordedEvents() {
     // console.log('deleteRecordedEvents', JSON.stringify(this.events));
-    this.events.forEach((e) => this.removeEvent(e.type, e.listener));
+    this.events.forEach(e => this.removeEvent(e.type, e.listener));
     this.events = [];
   }
 

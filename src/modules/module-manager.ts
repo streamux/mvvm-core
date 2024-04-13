@@ -2,6 +2,7 @@ import { addOnModule } from "./add-on-module";
 
 export class ModuleManager {
   private modulesMap: Map<string, any>;
+
   static create() {
     return new ModuleManager();
   }

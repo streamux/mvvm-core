@@ -98,13 +98,9 @@ export class BaseComponent {
   }
 
   render() {
-    const element =
-      this.containerId && document.querySelector(this.containerId);
+    const element = this.containerId && document.querySelector(this.containerId);
     const { components } = componentParser(this.template(), this);
-    const { eventMap, template, containerId } = templateParser(
-      components,
-      this
-    );
+    const { eventMap, template, containerId } = templateParser(components, this);
 
     this.eventMap = eventMap;
     this.containerId = containerId && "#" + containerId;
