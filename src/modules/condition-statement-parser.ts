@@ -1,4 +1,4 @@
-import { camelToKebab } from "../utils/string-util";
+import { camelToKebab } from '../utils/string-util';
 
 const removeConditionElement = (elList: Array<HTMLElement>) => {
   let isNextStepRemoved = false;
@@ -6,14 +6,14 @@ const removeConditionElement = (elList: Array<HTMLElement>) => {
   if (!elList) return;
 
   elList.forEach((el: HTMLElement) => {
-    const ifCondition = el.dataset["vIf"];
-    const ifElseIfCondition = el.dataset["vElseIf"];
+    const ifCondition = el.dataset['vIf'];
+    const ifElseIfCondition = el.dataset['vElseIf'];
     // const ifElseCondition = el.dataset["vElse"];
     const condition = ifCondition || ifElseIfCondition;
 
-    if (condition === "false" || isNextStepRemoved === true) {
+    if (condition === 'false' || isNextStepRemoved === true) {
       el.remove();
-    } else if (condition === "true") {
+    } else if (condition === 'true') {
       isNextStepRemoved = true;
     }
 
@@ -22,7 +22,7 @@ const removeConditionElement = (elList: Array<HTMLElement>) => {
     const conditionPattern = /^vif|velseif|velse/i;
 
     Object.entries(datasets).forEach(([key, value]) => {
-      if (conditionPattern.test(key)) el.removeAttribute("data-" + camelToKebab(key));
+      if (conditionPattern.test(key)) el.removeAttribute('data-' + camelToKebab(key));
     });
   });
 };
@@ -37,7 +37,7 @@ const searchNextConditionElement = (el: HTMLElement) => {
     if (nextEl) {
       elList.push(nextEl);
     }
-  } while (nextEl && nextEl.dataset["vElseIf" || "vElse"]);
+  } while (nextEl && nextEl.dataset['vElseIf' || 'vElse']);
 
   removeConditionElement(elList);
   elList = null;
@@ -45,8 +45,9 @@ const searchNextConditionElement = (el: HTMLElement) => {
 
 export const conditionStatementParser = (doc: HTMLElement) => {
   const container = doc;
-  const elements = doc.querySelectorAll("[data-v-if]");
-  elements.forEach((el: HTMLElement) => searchNextConditionElement(el));
+  const elements = doc.querySelectorAll('[data-v-if]');
+  console.log(elements);
+  elements.forEach((el: any) => searchNextConditionElement(el));
 
   return container;
 };
