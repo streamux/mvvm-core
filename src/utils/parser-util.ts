@@ -1,12 +1,8 @@
-import { checkObject, checkNumber } from "./validation-util";
+import { checkObject, checkNumber } from './validation-util';
 
-export const parseNumber = (data: any) =>
-  /\./.test(data) ? parseFloat(data) : parseInt(data);
+export const parseNumber = (data: any) => (/\./.test(data) ? parseFloat(data) : parseInt(data));
 
-export const parseDOM = (
-  tagString: string,
-  type: DOMParserSupportedType = "text/html"
-) => {
+export const parseDOM = (tagString: string, type: DOMParserSupportedType = 'text/html') => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(tagString, type);
   const element = doc.body.firstChild;
@@ -26,10 +22,10 @@ export const parseInvalid = (data: any) => {
   data = data && data.trim();
 
   switch (data) {
-    case "undefined":
+    case 'undefined':
       data = undefined;
       break;
-    case "null":
+    case 'null':
       data = null;
       break;
   }

@@ -1,4 +1,4 @@
-import { hasEqualEvent, isNativeEvent } from "../utils/event-util";
+import { hasEqualEvent, isNativeEvent } from '../utils/event-util';
 
 export class EventManager {
   public static $expert = window || {};

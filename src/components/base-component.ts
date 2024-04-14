@@ -1,12 +1,12 @@
-import { ModuleManager } from "../modules/module-manager";
-import { EventManager } from "../modules/event-manager";
-import { componentParser } from "../modules/component-parser";
-import { templateParser } from "../modules/template-parser";
-import { parseDOM } from "../utils/parser-util";
-import { conditionStatementParser } from "../modules/condition-statement-parser";
+import { ModuleManager } from '../modules/module-manager';
+import { EventManager } from '../modules/event-manager';
+import { componentParser } from '../modules/component-parser';
+import { templateParser } from '../modules/template-parser';
+import { parseDOM } from '../utils/parser-util';
+import { conditionStatementParser } from '../modules/condition-statement-parser';
 
 export class BaseComponent {
-  protected containerId: string = "";
+  protected containerId: string = '';
   protected uid: number = 0;
   protected moduleManager: ModuleManager = null;
   protected eventManager: EventManager = null;
@@ -16,7 +16,7 @@ export class BaseComponent {
 
     // basic properties
     this.uid = 0;
-    this.containerId = "";
+    this.containerId = '';
 
     // initialize module
     this.moduleManager = ModuleManager.create();
@@ -94,7 +94,7 @@ export class BaseComponent {
   }
 
   template() {
-    return "";
+    return '';
   }
 
   render() {
@@ -103,13 +103,13 @@ export class BaseComponent {
     const { eventMap, template, containerId } = templateParser(components, this);
 
     this.eventMap = eventMap;
-    this.containerId = containerId && "#" + containerId;
+    this.containerId = containerId && '#' + containerId;
 
     if (element) {
       let docTemplate = parseDOM(template) as HTMLElement;
       docTemplate = conditionStatementParser(docTemplate);
       element.parentNode.replaceChild(docTemplate, element);
-      return "";
+      return '';
     }
 
     return template;
