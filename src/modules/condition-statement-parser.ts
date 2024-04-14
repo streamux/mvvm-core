@@ -46,7 +46,6 @@ const searchNextConditionElement = (el: HTMLElement) => {
 export const conditionStatementParser = (doc: HTMLElement) => {
   const container = doc;
   const elements = doc.querySelectorAll('[data-v-if]');
-  console.log(elements);
   elements.forEach((el: any) => searchNextConditionElement(el));
 
   return container;

@@ -1,4 +1,4 @@
-import { BaseComponent } from "./base-components";
+import { BaseComponent } from './base-component';
 
 export class ButtonEvent extends BaseComponent {
   private _count: number = 0;
@@ -14,17 +14,17 @@ export class ButtonEvent extends BaseComponent {
   setup() {}
 
   minus(param: any) {
-    console.log("Events Minus!!", param);
+    console.log('Events Minus!!', param);
     this.setState(this.count--);
   }
 
   plus(param: any) {
-    console.log("Events Plus!!", param);
+    console.log('Events Plus!!', param);
     this.setState(this.count++);
   }
 
   multi(num: number, num2: number, arr: Array<any>, obj: Object) {
-    console.log("Events Calc!!", num, num2, arr, obj);
+    console.log('Events Calc!!', num, num2, arr, obj);
     this.count *= num;
     this.setState(this.count);
   }
@@ -33,7 +33,7 @@ export class ButtonEvent extends BaseComponent {
     // console.log('Dispatch::increase!!', typeof(num), num);
     // this.count += num;
 
-    this.emit("increase", {
+    this.emit('increase', {
       detail: {
         count: this.count
       }
@@ -46,7 +46,7 @@ export class ButtonEvent extends BaseComponent {
     // console.log('Dispatch::decrease!!', typeof(num), num);
     // this.count += num;
 
-    this.emit("decrease", {
+    this.emit('decrease', {
       detail: {
         count: this.count
       }
@@ -56,11 +56,11 @@ export class ButtonEvent extends BaseComponent {
   }
 
   loadHandler() {
-    console.log("loadHandler");
+    console.log('loadHandler');
   }
 
   unloadHandler() {
-    console.log("unloadHandler");
+    console.log('unloadHandler');
   }
 
   template() {

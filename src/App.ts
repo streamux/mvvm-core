@@ -1,4 +1,4 @@
-import { BaseComponent } from './components/base-components';
+import { BaseComponent } from './components/base-component';
 
 import { ButtonEvent } from './components/button-event';
 

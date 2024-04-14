@@ -1,10 +1,10 @@
-import { BaseComponent } from "./base-components";
+import { BaseComponent } from './base-component';
 
 export class MethodEvent extends BaseComponent {
   private _imageBorder: number = 0;
-  private _backgroundColor: string = "";
+  private _backgroundColor: string = '';
   private count: number = 0;
-  private image: string = "";
+  private image: string = '';
 
   get imageBorder() {
     return this._imageBorder;
@@ -24,29 +24,29 @@ export class MethodEvent extends BaseComponent {
 
   setup() {
     this.count = 0;
-    this.image = "";
+    this.image = '';
     this.imageBorder = 0;
-    this.backgroundColor = "fff";
+    this.backgroundColor = 'fff';
   }
 
   clickMethod(param: any) {
-    console.log("Methods BUTTON++!!", param);
+    console.log('Methods BUTTON++!!', param);
 
     this._imageBorder++;
     this.count++;
 
     this.setState();
 
-    this.emit("methodEvent", {
+    this.emit('methodEvent', {
       detail: {
-        message: "Method Event Handler++",
+        message: 'Method Event Handler++',
         count: this.count
       }
     });
   }
 
   clickMethod2(param: any) {
-    console.log("Methods BUTTON2--", param);
+    console.log('Methods BUTTON2--', param);
 
     this._imageBorder--;
     this.count--;
@@ -55,9 +55,9 @@ export class MethodEvent extends BaseComponent {
 
     this.setState();
 
-    this.emit("methodEvent", {
+    this.emit('methodEvent', {
       detail: {
-        message: "Method Event Handler--",
+        message: 'Method Event Handler--',
         count: this.count
       }
     });
