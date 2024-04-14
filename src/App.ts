@@ -5,7 +5,7 @@ import { ButtonEvent } from './components/button-event';
 import { MethodEvent } from './components/method-event';
 
 export class App extends BaseComponent {
-  private count: number = 0;
+  count: number = 0;
 
   components() {
     return {
