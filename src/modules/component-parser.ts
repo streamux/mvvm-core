@@ -1,8 +1,8 @@
-import { transformToDataType } from "../utils/parser-util";
-import { mergeToQueryString } from "../utils/string-util";
+import { transformToDataType } from '../utils/parser-util';
+import { mergeToQueryString } from '../utils/string-util';
 
 export const componentParser = (template: string, target: any) => {
-  let components = template || "";
+  let components = template || '';
 
   // Remove previously registered events
   target.deleteRecordedEvents();
@@ -11,9 +11,9 @@ export const componentParser = (template: string, target: any) => {
   target.modules.forEach((value: any, key: string) => {
     // Look up registered components against a module key
     components = components.replace(
-      new RegExp("(?:<" + key + "([^>]*)?>(.*)?</" + key + "[^>]*>)", "gim"),
+      new RegExp(`<${key}([^>]*)?>([^<]*)?<\/${key}>`, 'gim'),
       (origin, attributes, slot) => {
-        attributes = (attributes && attributes.trim()) || "";
+        attributes = (attributes && attributes.trim()) || '';
 
         // Convert a component event into a native event
         attributes = attributes.replace(
@@ -25,7 +25,7 @@ export const componentParser = (template: string, target: any) => {
               target.addEvent(eventType, eventListener.bind(target));
             }
 
-            return "";
+            return '';
           }
         );
 
@@ -38,7 +38,7 @@ export const componentParser = (template: string, target: any) => {
           (origin: string, propName: string, propValue: string) => {
             component[propName] = transformToDataType(propValue);
 
-            return "";
+            return '';
           }
         );
 
@@ -55,9 +55,9 @@ export const componentParser = (template: string, target: any) => {
             tempAttributes = tempAttributes
               .replace(/(?:([^\s]*)\s?=\s?"([^"]*)")/gi, (origin, attrKey, attrValue) => {
                 tempAttrObj[attrKey] = attrValue;
-                return "";
+                return '';
               })
-              .replace(/\s+/, "");
+              .replace(/\s+/, '');
 
             // Mix Component's Properties into Template's Properties
             attributes.replace(
@@ -71,7 +71,7 @@ export const componentParser = (template: string, target: any) => {
                 let tempAttrValue = tempAttrObj[compoAttrKey];
 
                 if (/style/i.test(compoAttrKey) && tempAttrValue) {
-                  tempAttrValue += /;$/.test(tempAttrValue) ? " " : "; ";
+                  tempAttrValue += /;$/.test(tempAttrValue) ? ' ' : '; ';
                   tempAttrObj[compoAttrKey] = tempAttrValue.trim();
                 }
               }
@@ -79,7 +79,7 @@ export const componentParser = (template: string, target: any) => {
 
             attributes.replace(/(v-else)(-if)?/gi, (origin: string, compoAttrKey: string, subCompoAttrKey: string) => {
               if (!subCompoAttrKey) {
-                tempAttrObj[compoAttrKey] = "";
+                tempAttrObj[compoAttrKey] = '';
               }
             });
 

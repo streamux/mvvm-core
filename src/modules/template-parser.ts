@@ -1,34 +1,29 @@
-import { getUniqKey } from "../utils/string-util";
-import { argumentParser } from "./argument-parser";
+import { getUniqKey } from '../utils/string-util';
+import { argumentParser } from './argument-parser';
 
 export const templateParser = (template: string, target: any) => {
   const eventMap: { [key: string]: any } = {};
-  let containerId = "";
+  let containerId = '';
   let idIndex = 0;
 
   // Search 'id' in container node
-  template = template.replace(
-    /^(<)([^>]*)(>)/gi,
-    (origin, prefix, attributes, suffix) => {
-      attributes = attributes || "";
+  template = template.replace(/^(?:\s+)?(<)([^>]*)(>)/gi, (origin, prefix, attributes, suffix) => {
+    attributes = attributes || '';
 
-      // Extract conatiner's id
-      const hasAttributeId = /id=/gi.test(attributes);
+    // Extract conatiner's id
+    const hasAttributeId = /id=/gi.test(attributes);
 
-      if (hasAttributeId) {
-        containerId = attributes.replace(/.*?id="([^"]*)"(?:[^>]*)?/gi, "$1");
-
-        return prefix + attributes + suffix;
-      }
-
-      containerId = `item_container_${getUniqKey(target.$uid, idIndex++)}`;
-
-      // 백틱 다음 id 앞쪽 공백 한칸 필요
-      const attrId = ` id="${containerId}"`;
-
-      return prefix + attributes + attrId + suffix;
+    if (hasAttributeId) {
+      containerId = attributes.replace(/.*?id="([^"]*)"(?:[^>]*)?/gi, '$1');
+      return prefix + attributes + suffix;
     }
-  );
+
+    containerId = `item_container_${getUniqKey(target.$uid, idIndex++)}`;
+
+    // 백틱 다음 id 앞쪽 공백 한칸 필요
+    const attrId = ` id="${containerId}"`;
+    return prefix + attributes + attrId + suffix;
+  });
 
   // Convert a custom event into a system event
   template = template.replace(
@@ -43,7 +38,7 @@ export const templateParser = (template: string, target: any) => {
       eventMap[eventId] = {
         eventType,
         methodName,
-        params,
+        params
       };
 
       return 'data-event-id="' + eventId + '"';
@@ -51,14 +46,11 @@ export const templateParser = (template: string, target: any) => {
   );
 
   // add a conditional statement identifier info dataset
-  template = template.replace(
-    /\s(v-else-if|v-if)\s?=\s?"([^"]*)"/gim,
-    (origin, prop, value) => {
-      return ` data-${prop}="${value}"`;
-    }
-  );
+  template = template.replace(/\s(v-else-if|v-if)\s?=\s?"([^"]*)"/gim, (origin, prop, value) => {
+    return ` data-${prop}="${value}"`;
+  });
 
-  template = template.replace(/\sv-else/gim, (origin) => {
+  template = template.replace(/\sv-else/gim, origin => {
     return ` data-v-else`;
   });
 

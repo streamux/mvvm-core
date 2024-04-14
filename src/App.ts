@@ -1,55 +1,53 @@
-import { BaseComponent } from "./components/base-components";
+import { BaseComponent } from './components/base-components';
 
-import { ButtonEvent } from "./components/button-event";
+import { ButtonEvent } from './components/button-event';
 
-import { MethodEvent } from "./components/method-event";
+import { MethodEvent } from './components/method-event';
 
 export class App extends BaseComponent {
   private count: number = 0;
 
   components() {
     return {
-      "button-event": ButtonEvent,
-      "method-event": MethodEvent
+      'button-event': ButtonEvent,
+      'method-event': MethodEvent
     };
   }
 
   setup() {
     this.count = 1;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("DOMContentLoaded");
+    document.addEventListener('DOMContentLoaded', () => {
       this.render();
     });
   }
 
   create(rootId: string) {
-    console.log("create");
     this.containerId = rootId;
   }
 
   increaseHandler(e: { [key: string]: any }) {
-    console.log("App:increaseHandler", e.detail.count);
+    console.log('App:increaseHandler', e.detail.count);
 
     this.count = e.detail.count + 5;
     this.render();
   }
 
   decreaseHandler(e: { [key: string]: any }) {
-    console.log("App:decreaseHandler", e.detail.count);
+    console.log('App:decreaseHandler', e.detail.count);
 
     this.count = e.detail.count - 5;
     this.render();
   }
 
   methodEventHandler(e: { [key: string]: any }) {
-    console.log("App:methodEventHandler", e.detail.count, e.detail.message);
+    console.log('App:methodEventHandler', e.detail.count, e.detail.message);
     this.count = e.detail.count;
     this.render();
   }
 
   appHandler() {
-    console.log("appHandler");
+    console.log('appHandler');
   }
 
   template() {
@@ -60,31 +58,39 @@ export class App extends BaseComponent {
             v-if="${this.count === 0}" 
             :count="${this.count}"
             :imageBorder="${this.count}"
-            :backgroundColor="#f00"></method-event>
+            :backgroundColor="#f00">
+              test
+          </method-event>
           <method-event 
             v-else-if="${this.count === 1}" 
             :count="${this.count}"
             :imageBorder="${this.count}" 
-            :backgroundColor="#0f0"></method-event>
+            :backgroundColor="#0f0">
+          </method-event>
           <method-event 
             v-else-if="${this.count === 2}" 
             :count="${this.count}" 
             :imageBorder="${this.count}"
-            :backgroundColor="#00f"></method-event>
+            :backgroundColor="#00f">
+          </method-event>
           <method-event 
             v-else-if="${this.count === 3}"
             :count="${this.count}"
             :imageBorder="${this.count}" 
-            :backgroundColor="#ff0"></method-event>
+            :backgroundColor="#ff0">
+              홍길동
+          </method-event>
           <method-event 
             v-else 
             :count="${this.count}" 
             :imageBorder="${this.count}" 
-            :backgroundColor="#f0f"></method-event>
+            :backgroundColor="#f0f">
+          </method-event>
           <method-event :count="${this.count}" 
             :imageBorder="${this.count}"
             :image="https://upload.wikimedia.org/wikipedia/commons/1/10/Marvel_Studios_2016_logo.svg"
-            @methodEvent="methodEventHandler"></method-event>
+            @methodEvent="methodEventHandler">
+          </method-event>
       </div>`;
   }
 }
