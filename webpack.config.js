@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'product',
   entry: './src/index.ts',
   output: {
     filename: '[name].bundle.js',
