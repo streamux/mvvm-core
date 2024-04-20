@@ -3,29 +3,20 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-  mode: 'product',
-  entry: './src/index.ts',
+  mode: 'development',
+  entry: './docs/main.ts',
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
   devServer: {
-    port: 8000
+    port: 8080
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: 'babel-loader'
-      },
-      {
-        test: /\.txt$/,
-        use: 'raw-loader'
-      },
-      {
         test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
+        use: 'ts-loader'
       }
     ]
   },

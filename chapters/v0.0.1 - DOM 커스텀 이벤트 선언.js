@@ -14,7 +14,7 @@
  **/
 
 const template = `
-  <div>
+<div>
     <div on:click="clickTest" style="border: 1px solid #f00">DIV BUTTON</div>
     <br />
     <button on:click="click2Test">Button</button>

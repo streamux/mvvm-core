@@ -1,4 +1,4 @@
-import { BaseComponent } from './base-component';
+import { BaseComponent } from '../../src/components/base-component';
 
 export class ButtonEvent extends BaseComponent {
   private _count: number = 0;

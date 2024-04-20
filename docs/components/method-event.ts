@@ -1,4 +1,4 @@
-import { BaseComponent } from './base-component';
+import { BaseComponent } from '../../src/components/base-component';
 
 export class MethodEvent extends BaseComponent {
   private _imageBorder: number = 0;
