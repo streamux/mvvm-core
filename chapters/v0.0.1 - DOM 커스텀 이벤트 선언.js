@@ -1,7 +1,6 @@
-
 /**
  *
- * 설명 
+ * 설명
  * DOM 엘리먼트에 사용자 정의 이벤트를 정의한다.
  *
  * 1. 사용자 정의 이벤트를 추출해 이벤트 배열에 검색 가능하도록 식별 처리 후
@@ -14,60 +13,56 @@
  *
  **/
 
-
-const template = (
-  `<div>
+const template = `
+  <div>
     <div on:click="clickTest" style="border: 1px solid #f00">DIV BUTTON</div>
     <br />
     <button on:click="click2Test">Button</button>
-  </div>`
-);
+  </div>`;
 
 // Event Manager
 const events = {};
 
 // Render
-const templateParser = (temp) => temp.replace(/on:([^=]*)="([^"]*)"/gi, (origin, eventType, methodName) => {
-  // console.log("eventType", eventType, methodName);
+const templateParser = temp =>
+  temp.replace(/on:([^=]*)="([^"]*)"/gi, (origin, eventType, methodName) => {
+    // console.log("eventType", eventType, methodName);
 
-  const targetId = methodName + '_' + Date.now();
-  events[targetId] = {
-    eventType,
-    methodName
-  };
-  
-  return `id="${targetId}"`;
-});
+    const targetId = methodName + '_' + Date.now();
+    events[targetId] = {
+      eventType,
+      methodName
+    };
 
+    return `id="${targetId}"`;
+  });
 
 // global event declare
 const listener = function (e) {
   const id = e.target && e.target.id;
-  
-  if (!id) 
-    return;
-  
+
+  if (!id) return;
+
   const event = events[id];
   const methodName = event && event.methodName;
-  
+
   methodName && this[methodName]();
 };
-
 
 // declare component
 class Methods {
   constructor() {
-    document.addEventListener('click', listener.bind(this))
+    document.addEventListener('click', listener.bind(this));
   }
-  
+
   clickTest() {
     console.log('click test!!');
   }
-  
+
   click2Test() {
     console.log('click test2');
   }
-};
+}
 
 new Methods();
 

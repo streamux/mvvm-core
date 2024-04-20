@@ -9,31 +9,29 @@
  **/
 
 // Util
-const camelToKebab = (str) => {
-  if (!str) return "";
+const camelToKebab = str => {
+  if (!str) return '';
 
-  if (typeof str !== "string") return str.toString();
+  if (typeof str !== 'string') return str.toString();
 
   return str.replace(/([A-Z])/g, (origin, word) => `-${word.toLowerCase()}`);
 };
 
-const getUniqKey = (uid, eventNo) =>
-  `${Date.now().toString(34)}${uid}${eventNo}`;
-const isNativeEvent = (type) => window["on" + type] === null;
-const checkNumber = (data) => /^[+%*-]?\d*(?:\.\d*)?$/.test(data);
-const checkObject = (data) => /^\[|\{.*\]|\}$/.test(data);
-const parseNumber = (data) =>
-  /\./.test(data) ? parseFloat(data) : parseInt(data);
+const getUniqKey = (uid, eventNo) => `${Date.now().toString(34)}${uid}${eventNo}`;
+const isNativeEvent = type => window['on' + type] === null;
+const checkNumber = data => /^[+%*-]?\d*(?:\.\d*)?$/.test(data);
+const checkObject = data => /^\[|\{.*\]|\}$/.test(data);
+const parseNumber = data => (/\./.test(data) ? parseFloat(data) : parseInt(data));
 
-const parseDOM = (tagString) => {
+const parseDOM = tagString => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(tagString, "text/html");
+  const doc = parser.parseFromString(tagString, 'text/html');
   const element = doc.body.firstChild;
 
   return element;
 };
 
-const parseObject = (data) => {
+const parseObject = data => {
   try {
     return JSON.parse(data);
   } catch (e) {
@@ -41,20 +39,20 @@ const parseObject = (data) => {
   }
 };
 
-const parseInvalid = (data) => {
+const parseInvalid = data => {
   switch (data) {
-    case "undefined":
+    case 'undefined':
       data = undefined;
       break;
-    case "null":
+    case 'null':
       data = null;
       break;
   }
   return data;
 };
 
-const mergeToQueryString = (obj) => {
-  let queryString = "";
+const mergeToQueryString = obj => {
+  let queryString = '';
   Object.entries(obj).forEach(([key, value]) => {
     queryString += value ? ` ${key}="${value}"` : ` ${key}`;
   });
@@ -63,7 +61,7 @@ const mergeToQueryString = (obj) => {
 };
 
 // Transform to Data
-const transformToDataType = (data) => {
+const transformToDataType = data => {
   if (!data) return parseInvalid(data);
 
   data = data.trim();
@@ -76,7 +74,7 @@ const transformToDataType = (data) => {
 };
 
 // Module
-const addModule = (module) => {
+const addModule = module => {
   let uid = 0;
 
   return {
@@ -86,23 +84,22 @@ const addModule = (module) => {
       component.$uid = uid;
 
       return component;
-    },
+    }
   };
 };
 
 // Parser
-const argumentParser = (arg) => {
+const argumentParser = arg => {
   if (!arg) return [];
 
-  if (arg.indexOf(",") !== -1)
-    return arg.split(",").map((data) => transformToDataType(data));
+  if (arg.indexOf(',') !== -1) return arg.split(',').map(data => transformToDataType(data));
 
   const parsedData = transformToDataType(arg);
   return [parsedData];
 };
 
 const componentParser = (template, target) => {
-  let components = template || "";
+  let components = template || '';
 
   // Remove previously registered events
   target.deleteRecordedEvents();
@@ -111,9 +108,9 @@ const componentParser = (template, target) => {
   target.modules.forEach((value, key) => {
     // Look up registered components against a module key
     components = components.replace(
-      new RegExp("(?:<" + key + "([^>]*)?>(.*)?</" + key + "[^>]*>)", "gim"),
+      new RegExp('(?:<' + key + '([^>]*)?>(.*)?</' + key + '[^>]*>)', 'gim'),
       (origin, attributes, slot) => {
-        attributes = (attributes && attributes.trim()) || "";
+        attributes = (attributes && attributes.trim()) || '';
 
         // Convert a component event into a native event
         attributes = attributes.replace(
@@ -125,7 +122,7 @@ const componentParser = (template, target) => {
               target.addEvent(eventType, eventListener.bind(target));
             }
 
-            return "";
+            return '';
           }
         );
 
@@ -133,13 +130,10 @@ const componentParser = (template, target) => {
         const component = target.modules.get(key).createComponent();
 
         // Convert component tag's props into a class properties
-        attributes = attributes.replace(
-          /(?:\s+)?:([^=]*)="([^"]*)"/g,
-          (origin, propName, propValue) => {
-            component[propName] = transformToDataType(propValue);
-            return "";
-          }
-        );
+        attributes = attributes.replace(/(?:\s+)?:([^=]*)="([^"]*)"/g, (origin, propName, propValue) => {
+          component[propName] = transformToDataType(propValue);
+          return '';
+        });
 
         //-- return component's template
         let renderedTemplate = component.render();
@@ -152,41 +146,32 @@ const componentParser = (template, target) => {
 
             // extract component properties
             tempAttributes = tempAttributes
-              .replace(
-                /(?:([^\s]*)\s?=\s?"([^"]*)")/gi,
-                (origin, attrKey, attrValue) => {
-                  tempAttrObj[attrKey] = attrValue;
-                  return "";
-                }
-              )
-              .replace(/\s+/, "");
+              .replace(/(?:([^\s]*)\s?=\s?"([^"]*)")/gi, (origin, attrKey, attrValue) => {
+                tempAttrObj[attrKey] = attrValue;
+                return '';
+              })
+              .replace(/\s+/, '');
 
             // Mix Component's Properties into Template's Properties
-            attributes.replace(
-              /(?:([^\s]*)\s?=\s?"([^"]*)")/gi,
-              (origin, compoAttrKey, compoAttrValue) => {
-                if (!tempAttrObj[compoAttrKey]) {
-                  tempAttrObj[compoAttrKey] = compoAttrValue;
-                }
-
-                // add a comma at the end of the style attribute
-                let tempAttrValue = tempAttrObj[compoAttrKey];
-
-                if (/style/i.test(compoAttrKey) && tempAttrValue) {
-                  tempAttrValue += /;$/.test(tempAttrValue) ? " " : "; ";
-                  tempAttrObj[compoAttrKey] = tempAttrValue.trim();
-                }
+            attributes.replace(/(?:([^\s]*)\s?=\s?"([^"]*)")/gi, (origin, compoAttrKey, compoAttrValue) => {
+              if (!tempAttrObj[compoAttrKey]) {
+                tempAttrObj[compoAttrKey] = compoAttrValue;
               }
-            );
 
-            attributes.replace(
-              /(?:(v-else)[^-])?/gi,
-              (origin, compoAttrKey) => {
-                if (compoAttrKey) {
-                  tempAttrObj[compoAttrKey] = "";
-                }
+              // add a comma at the end of the style attribute
+              let tempAttrValue = tempAttrObj[compoAttrKey];
+
+              if (/style/i.test(compoAttrKey) && tempAttrValue) {
+                tempAttrValue += /;$/.test(tempAttrValue) ? ' ' : '; ';
+                tempAttrObj[compoAttrKey] = tempAttrValue.trim();
               }
-            );
+            });
+
+            attributes.replace(/(?:(v-else)[^-])?/gi, (origin, compoAttrKey) => {
+              if (compoAttrKey) {
+                tempAttrObj[compoAttrKey] = '';
+              }
+            });
 
             tempAttributes = mergeToQueryString(tempAttrObj);
 
@@ -204,31 +189,28 @@ const componentParser = (template, target) => {
 
 const templateParser = (template, target) => {
   const eventMap = {};
-  let containerId = "";
+  let containerId = '';
   let idIndex = 0;
 
   // Search 'id' in container node
-  template = template.replace(
-    /^(<)([^>]*)(>)/gi,
-    (origin, prefix, attributes, suffix) => {
-      attributes = attributes || "";
+  template = template.replace(/^(<)([^>]*)(>)/gi, (origin, prefix, attributes, suffix) => {
+    attributes = attributes || '';
 
-      // Extract conatiner's id
-      const hasAttributeId = /id=/gi.test(attributes);
+    // Extract conatiner's id
+    const hasAttributeId = /id=/gi.test(attributes);
 
-      if (hasAttributeId) {
-        containerId = attributes.replace(/.*?id="([^"]*)"(?:[^>]*)?/gi, "$1");
-        return prefix + attributes + suffix;
-      }
-
-      containerId = `item_container_${getUniqKey(target.$uid, idIndex++)}`;
-
-      // 백틱 다음 id 앞쪽 공백 한칸 필요
-      const attrId = ` id="${containerId}"`;
-
-      return prefix + attributes + attrId + suffix;
+    if (hasAttributeId) {
+      containerId = attributes.replace(/.*?id="([^"]*)"(?:[^>]*)?/gi, '$1');
+      return prefix + attributes + suffix;
     }
-  );
+
+    containerId = `item_container_${getUniqKey(target.$uid, idIndex++)}`;
+
+    // 백틱 다음 id 앞쪽 공백 한칸 필요
+    const attrId = ` id="${containerId}"`;
+
+    return prefix + attributes + attrId + suffix;
+  });
 
   // Convert a custom event into a system event
   template = template.replace(
@@ -243,7 +225,7 @@ const templateParser = (template, target) => {
       eventMap[eventId] = {
         eventType,
         methodName,
-        params,
+        params
       };
 
       return `data-event-id="${eventId}"`;
@@ -256,27 +238,27 @@ const templateParser = (template, target) => {
     (origin, prop, value) => ` data-${prop}="${value}"`
   );
 
-  template = template.replace(/\sv-else/gim, (origin) => {
+  template = template.replace(/\sv-else/gim, origin => {
     return ` data-v-else`;
   });
 
   return { template, eventMap, containerId };
 };
 
-const conditionStatementParser = (doc) => {
+const conditionStatementParser = doc => {
   const container = doc;
-  const elements = doc.querySelectorAll("[data-v-if]");
+  const elements = doc.querySelectorAll('[data-v-if]');
 
   // remove condition's element
-  const removeConditionElement = (elList) => {
+  const removeConditionElement = elList => {
     let isNextStepRemoved = false;
 
     if (!elList) return;
 
-    elList.forEach((el) => {
-      const ifElseIfCondition = el.dataset["vIf" || "vElseIf"];
+    elList.forEach(el => {
+      const ifElseIfCondition = el.dataset['vIf' || 'vElseIf'];
 
-      if (ifElseIfCondition === "false" || isNextStepRemoved === true) {
+      if (ifElseIfCondition === 'false' || isNextStepRemoved === true) {
         el.remove();
       } else {
         // remove dummy prop not to need
@@ -284,19 +266,18 @@ const conditionStatementParser = (doc) => {
         const conditionPattern = /^vif|velseif|velse/i;
 
         Object.entries(datasets).forEach(([key, value]) => {
-          if (conditionPattern.test(key))
-            el.removeAttribute("data-" + camelToKebab(key));
+          if (conditionPattern.test(key)) el.removeAttribute('data-' + camelToKebab(key));
         });
       }
 
-      if (ifElseIfCondition === "true") {
+      if (ifElseIfCondition === 'true') {
         isNextStepRemoved = true;
       }
     });
   };
 
   // search element
-  const handleElement = (el) => {
+  const handleElement = el => {
     let nextEl = el;
     let elList = [nextEl];
 
@@ -305,13 +286,13 @@ const conditionStatementParser = (doc) => {
       if (nextEl) {
         elList.push(nextEl);
       }
-    } while (nextEl && nextEl.dataset["vElseIf" || "vElse"]);
+    } while (nextEl && nextEl.dataset['vElseIf' || 'vElse']);
 
     removeConditionElement(elList);
     elList = null;
   };
 
-  elements.forEach((el) => handleElement(el));
+  elements.forEach(el => handleElement(el));
 
   return container;
 };
@@ -345,15 +326,14 @@ class EventManager {
   }
 
   deleteRecordedEvents() {
-    this.events.forEach((e) => {
+    this.events.forEach(e => {
       this.removeEvent(e.type, e.listener);
     });
     this.events = [];
   }
 
   addEvent(type, listener) {
-    const hasSameEvent =
-      this.events.find((e) => e.type === type) && isNativeEvent(type);
+    const hasSameEvent = this.events.find(e => e.type === type) && isNativeEvent(type);
 
     if (hasSameEvent) return;
 
@@ -398,7 +378,7 @@ class BaseComponent {
 
     // basic properties
     this.uid = 0;
-    this.containerId = "";
+    this.containerId = '';
 
     // initialize module
     this.moduleManager = ModuleManager.create();
@@ -474,26 +454,22 @@ class BaseComponent {
   }
 
   template() {
-    return "";
+    return '';
   }
 
   render() {
-    const element =
-      this.containerId && document.querySelector(this.containerId);
+    const element = this.containerId && document.querySelector(this.containerId);
     const { components } = componentParser(this.template(), this);
-    const { eventMap, template, containerId } = templateParser(
-      components,
-      this
-    );
+    const { eventMap, template, containerId } = templateParser(components, this);
 
     this.eventMap = eventMap;
-    this.containerId = containerId && "#" + containerId;
+    this.containerId = containerId && '#' + containerId;
 
     if (element) {
       let docTemplate = parseDOM(template);
       docTemplate = conditionStatementParser(docTemplate);
       element.parentNode.replaceChild(docTemplate, element);
-      return "";
+      return '';
     }
 
     return template;
@@ -512,7 +488,7 @@ class MethodEvent extends BaseComponent {
 
   setup() {
     this.count = 0;
-    this.image = "";
+    this.image = '';
     this.imageBorder = 0;
   }
 
@@ -524,11 +500,11 @@ class MethodEvent extends BaseComponent {
 
     this.setState();
 
-    this.emit("methodEvent", {
+    this.emit('methodEvent', {
       detail: {
-        message: "Method Event Handler++",
-        count: this.count,
-      },
+        message: 'Method Event Handler++',
+        count: this.count
+      }
     });
   }
 
@@ -542,11 +518,11 @@ class MethodEvent extends BaseComponent {
 
     this.setState();
 
-    this.emit("methodEvent", {
+    this.emit('methodEvent', {
       detail: {
-        message: "Method Event Handler--",
-        count: this.count,
-      },
+        message: 'Method Event Handler--',
+        count: this.count
+      }
     });
   }
 
@@ -557,9 +533,8 @@ class MethodEvent extends BaseComponent {
         <p v-if="${this.count === 7}">
            ${this.count}
         </p>
-        <p v-else><img src="${this.image}" style="border: ${
-      this.imageBorder
-    }px solid #0f0"/></p>
+        <p v-else>
+          <img src="${this.image}" style="border: ${this.imageBorder}px solid #0f0"/></p>
       </div>`;
   }
 }
@@ -595,10 +570,10 @@ class ButtonEvent extends BaseComponent {
     // console.log('Dispatch::increase!!', typeof(num), num);
     // this.count += num;
 
-    this.emit("increase", {
+    this.emit('increase', {
       detail: {
-        count: this.count,
-      },
+        count: this.count
+      }
     });
 
     // this.setState(this.count);
@@ -608,25 +583,26 @@ class ButtonEvent extends BaseComponent {
     // console.log('Dispatch::decrease!!', typeof(num), num);
     // this.count += num;
 
-    this.emit("decrease", {
+    this.emit('decrease', {
       detail: {
-        count: this.count,
-      },
+        count: this.count
+      }
     });
 
     // this.setState(this.count);
   }
 
   loadHandler() {
-    console.log("loadHandler");
+    console.log('loadHandler');
   }
 
   unloadHandler() {
-    console.log("unloadHandler");
+    console.log('unloadHandler');
   }
 
   template() {
-    return `<div style="border: 1px solid #f00">
+    return `
+      <div style="border: 1px solid #f00">
         <p style="padding: 2px;border: 1px solid #f00">
           ButtonEvent:count = ${this.count}
         </p>
@@ -644,71 +620,80 @@ class ButtonEvent extends BaseComponent {
 class App extends BaseComponent {
   components() {
     return {
-      "button-event": ButtonEvent,
-      "method-event": MethodEvent,
+      'button-event': ButtonEvent,
+      'method-event': MethodEvent
     };
   }
 
   setup() {
     this.count = 7;
 
-    console.log("setup");
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("DOMContentLoaded");
+    console.log('setup');
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOMContentLoaded');
       this.render();
     });
   }
 
   create(rootId) {
-    console.log("create");
+    console.log('create');
     this.containerId = rootId;
     // this.render();
   }
 
   increaseHandler(e) {
-    console.log("App:increaseHandler", e.detail.count);
+    console.log('App:increaseHandler', e.detail.count);
 
     this.count = e.detail.count + 5;
     this.render();
   }
 
   decreaseHandler(e) {
-    console.log("App:decreaseHandler", e.detail.count);
+    console.log('App:decreaseHandler', e.detail.count);
 
     this.count = e.detail.count - 5;
     this.render();
   }
 
   methodEventHandler(e) {
-    console.log("App:methodEventHandler", e.detail.count, e.detail.message);
+    console.log('App:methodEventHandler', e.detail.count, e.detail.message);
     this.count = e.detail.count;
     this.render();
   }
 
   appHandler() {
-    console.log("appHandler");
+    console.log('appHandler');
   }
 
   template() {
-    console.log("template");
+    console.log('template');
 
-    return `<div id="container" style="border:2px solid #f0f">
+    return `
+      <div id="container" style="border:2px solid #f0f">
         <p>${this.count}</p>
-        <method-event v-if="${this.count > 0}" :count="${
-      this.count
-    }" style="background-color: #00f"></method-event>
-        <method-event v-else-if="${this.count > 1}" :count="${
-      this.count
-    }" style="background-color: #00b"></method-event>
-        <method-event v-else :count="${
-          this.count
-        }" style="background-color: #00c"></method-event>
-        <method-event :count="${
-          this.count
-        }" :image="https://upload.wikimedia.org/wikipedia/commons/1/10/Marvel_Studios_2016_logo.svg" @methodEvent="methodEventHandler"></method-event>
+        <method-event 
+          v-if="${this.count > 0}" 
+          :count="${this.count}" 
+          style="background-color: #00f">
+        </method-event>
+        <method-event 
+          v-else-if="${this.count > 1}" 
+          :count="${this.count}" 
+          style="background-color: #00b">
+        </method-event>
+        <method-event 
+          v-else 
+          :count="${this.count}" 
+          style="background-color: #00c">
+        </method-event>
+        <method-event 
+          :count="${this.count}" 
+          :image="https://upload.wikimedia.org/wikipedia/commons/1/10/Marvel_Studios_2016_logo.svg" 
+          @methodEvent="methodEventHandler">
+        </method-event>
       </div>`;
   }
 }
 
 // Create App
-export const app = new App().create("#app");
+export const app = new App().create('#app');
